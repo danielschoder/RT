@@ -4,5 +4,5 @@ namespace WebMVC.Models;
 
 public class PlatesViewModel
 {
-    public List<PlateDto>? Plates { get; set; }
+    public List<PlateBasicDto>? Plates { get; set; }
 }
