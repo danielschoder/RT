@@ -1,6 +1,6 @@
-﻿namespace Catalog.Domain
+﻿namespace Catalog.API.DTOs
 {
-    public class Plate
+    public class PlateDto
     {
         public Guid Id { get; set; }
 
