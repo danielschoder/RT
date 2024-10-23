@@ -4,7 +4,7 @@ using Catalog.API.DTOs;
 namespace Catalog.API.Controllers;
 
 [ApiController]
-[Route("api/gates")]
+[Route("api/plates")]
 public class PlatesController : Controller
 {
     private readonly IPlatesManager _platesManager;

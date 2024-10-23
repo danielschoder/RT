@@ -1,0 +1,42 @@
+﻿@using WebMVC.Models
+@model PlatesViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Plates</h1>
+
+    @if (Model.Plates != null && Model.Plates.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Registration</th>
+                    <th>Purchase Price</th>
+                    <th>Sale Price</th>
+                    <th>Letters</th>
+                    <th>Numbers</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var plate in Model.Plates)
+                {
+                    <tr>
+                        <td>@plate.Id</td>
+                        <td>@plate.Registration</td>
+                        <td>@plate.PurchasePrice</td>
+                        <td>@plate.SalePrice</td>
+                        <td>@plate.Letters</td>
+                        <td>@plate.Numbers</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No plates available.</p>
+    }
+</div>

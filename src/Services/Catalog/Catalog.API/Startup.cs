@@ -48,6 +48,16 @@ namespace Catalog.API
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
 
             services.AddControllers();
             services.AddControllersWithViews();
@@ -124,6 +134,8 @@ namespace Catalog.API
             app.UseRouting();
 
             app.UseCors("CorsPolicy");
+
+            app.UseCors("AllowAllOrigins");
 
             app.UseEndpoints(endpoints =>
             {

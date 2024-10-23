@@ -1,4 +1,4 @@
-﻿namespace Catalog.API.DTOs;
+﻿namespace WebMVC.DTOs;
 
 public class PlateDto
 {
