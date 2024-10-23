@@ -1,4 +1,6 @@
-﻿using MassTransit;
+﻿using Catalog.API.BLL;
+using Catalog.API.DAL;
+using MassTransit;
 using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
 
@@ -50,6 +52,9 @@ namespace Catalog.API
             services.AddControllers();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddScoped<IPlatesAccessor, PlatesAccessor>();
+            services.AddScoped<IPlatesManager, PlatesManager>();
 
             services.AddMassTransit(x =>
             {

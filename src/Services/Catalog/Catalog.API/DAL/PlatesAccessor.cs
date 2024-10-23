@@ -1,6 +1,6 @@
 ﻿namespace Catalog.API.DAL;
 
-public class PlatesAccessor
+public class PlatesAccessor : IPlatesAccessor
 {
     private readonly ApplicationDbContext _dbContext;
 

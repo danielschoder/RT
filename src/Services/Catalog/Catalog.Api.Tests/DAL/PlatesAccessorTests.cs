@@ -9,7 +9,7 @@ namespace Catalog.API.Tests.DAL;
 public class PlatesAccessorTests
 {
     private ApplicationDbContext _dbContext;
-    private PlatesAccessor _platesAccessor;
+    private IPlatesAccessor _platesAccessor;
 
     [SetUp]
     public void SetUp()
@@ -23,8 +23,8 @@ public class PlatesAccessorTests
 
         var plates = new List<Plate>
         {
-            new Plate { Id = Guid.NewGuid(), Registration = "ABC123", PurchasePrice = 100.00m, SalePrice = 150.00m, Letters = "ABC", Numbers = 123 },
-            new Plate { Id = Guid.NewGuid(), Registration = "XYZ789", PurchasePrice = 200.00m, SalePrice = 250.00m, Letters = "XYZ", Numbers = 456 }
+            new() { Id = Guid.NewGuid(), Registration = "ABC123", PurchasePrice = 100.00m, SalePrice = 150.00m, Letters = "ABC", Numbers = 123 },
+            new() { Id = Guid.NewGuid(), Registration = "XYZ789", PurchasePrice = 200.00m, SalePrice = 250.00m, Letters = "XYZ", Numbers = 789 }
         };
 
         _dbContext.Plates.AddRange(plates);
