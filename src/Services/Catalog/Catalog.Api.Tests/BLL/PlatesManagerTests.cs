@@ -23,10 +23,12 @@ public class PlatesManagerTests
     public async Task GetPlatesAsync_ReturnsPlateDtos()
     {
         // Arrange
+        var id0 = Guid.NewGuid();
+        var id1 = Guid.NewGuid();
         var plates = new List<Plate>
         {
-            new() { Id = Guid.NewGuid(), Registration = "ABC123", PurchasePrice = 100.00m, SalePrice = 150.00m, Letters = "ABC", Numbers = 123 },
-            new() { Id = Guid.NewGuid(), Registration = "XYZ789", PurchasePrice = 200.00m, SalePrice = 250.00m, Letters = "XYZ", Numbers = 789 }
+            new() { Id = id0, Registration = "ABC123", PurchasePrice = 100.00m, SalePrice = 150.00m, Letters = "ABC", Numbers = 123 },
+            new() { Id = id1, Registration = "XYZ789", PurchasePrice = 200.00m, SalePrice = 250.00m, Letters = "XYZ", Numbers = 789 }
         };
 
         _mockPlatesAccessor
@@ -43,15 +45,21 @@ public class PlatesManagerTests
         var plateDtos = result.ToList();
         Assert.Multiple(() =>
         {
+            Assert.That(plateDtos[0].Id, Is.EqualTo(id0));
             Assert.That(plateDtos[0].Registration, Is.EqualTo("ABC123"));
-            Assert.That(plateDtos[0].Numbers, Is.EqualTo(123));
+            Assert.That(plateDtos[0].PurchasePrice, Is.EqualTo(100.00m));
             Assert.That(plateDtos[0].SalePrice, Is.EqualTo(150.00m));
+            Assert.That(plateDtos[0].Letters, Is.EqualTo("ABC"));
+            Assert.That(plateDtos[0].Numbers, Is.EqualTo(123));
         });
         Assert.Multiple(() =>
         {
+            Assert.That(plateDtos[1].Id, Is.EqualTo(id1));
             Assert.That(plateDtos[1].Registration, Is.EqualTo("XYZ789"));
-            Assert.That(plateDtos[1].Numbers, Is.EqualTo(789));
+            Assert.That(plateDtos[1].PurchasePrice, Is.EqualTo(200.00m));
             Assert.That(plateDtos[1].SalePrice, Is.EqualTo(250.00m));
+            Assert.That(plateDtos[1].Letters, Is.EqualTo("XYZ"));
+            Assert.That(plateDtos[1].Numbers, Is.EqualTo(789));
         });
         _mockPlatesAccessor.Verify(pa => pa.ListAsync(), Times.Once);
     }
