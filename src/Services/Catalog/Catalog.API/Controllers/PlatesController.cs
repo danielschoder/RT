@@ -14,6 +14,14 @@ public class PlatesController : Controller
         _platesManager = platesManager;
     }
 
+    [HttpPost]
+    public async Task<ActionResult<PlateDto>> CreatePlate([FromBody] PlateDto newPlate)
+    {
+        var createdPlate = await _platesManager.CreateAsync(newPlate);
+
+        return CreatedAtAction(nameof(GetPlate), new { id = createdPlate.Id }, createdPlate);
+    }
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PlateDto>>> GetPlates()
     {

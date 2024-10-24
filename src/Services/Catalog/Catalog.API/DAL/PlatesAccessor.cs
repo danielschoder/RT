@@ -8,6 +8,10 @@ public class PlatesAccessor : IPlatesAccessor
     {
         _dbContext = dbContext;
     }
+    public async Task CreateAsync(Plate plate)
+    {
+        await _dbContext.Plates.AddAsync(plate);
+    }
 
     public async Task<IEnumerable<Plate>> ListAsync()
     {
@@ -21,5 +25,10 @@ public class PlatesAccessor : IPlatesAccessor
         return await _dbContext.Plates
             .AsNoTracking()
             .FirstOrDefaultAsync(plate => plate.Id == id);
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _dbContext.SaveChangesAsync();
     }
 }
