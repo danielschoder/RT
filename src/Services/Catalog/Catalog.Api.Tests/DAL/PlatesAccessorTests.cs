@@ -43,6 +43,48 @@ public class PlatesAccessorTests
         Assert.That(result.Count(), Is.EqualTo(2));
     }
 
+    [Test]
+    public async Task GetAsync_ReturnsPlate_WhenPlateExists()
+    {
+        // Arrange
+        var existingPlate = await _dbContext.Plates.FirstAsync();
+
+        // Act
+        var result = await _platesAccessor.GetAsync(existingPlate.Id);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Registration, Is.EqualTo(existingPlate.Registration));
+    }
+
+    [Test]
+    public async Task GetAsync_ReturnsNull_WhenPlateDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var result = await _platesAccessor.GetAsync(nonExistentId);
+
+        // Assert
+        Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public async Task ListAsync_ReturnsEmpty_WhenNoPlatesInDatabase()
+    {
+        // Arrange
+        _dbContext.Plates.RemoveRange(_dbContext.Plates);
+        _dbContext.SaveChanges();
+
+        // Act
+        var result = await _platesAccessor.ListAsync();
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.Empty);
+    }
+
     [TearDown]
     public void TearDown()
     {

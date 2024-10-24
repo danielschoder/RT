@@ -26,4 +26,20 @@ public class PlatesManager : IPlatesManager
             Numbers = plate.Numbers
         });
     }
+
+    public async Task<PlateDto?> GetAsync(Guid id)
+    {
+        var plate = await _platesAccessor.GetAsync(id);
+        if (plate is null) { return null; }
+
+        return new PlateDto
+        {
+            Id = plate.Id,
+            Registration = plate.Registration,
+            PurchasePrice = plate.PurchasePrice,
+            SalePrice = plate.SalePrice,
+            Letters = plate.Letters,
+            Numbers = plate.Numbers
+        };
+    }
 }
