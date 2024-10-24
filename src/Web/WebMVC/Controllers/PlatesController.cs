@@ -1,6 +1,4 @@
-﻿using RTCodingExercise.Microservices.Models;
-using System.Diagnostics;
-using WebMVC.DTOs;
+﻿using WebMVC.DTOs;
 using WebMVC.Models;
 
 namespace WebMVC.Controllers;
@@ -20,31 +18,25 @@ public class PlatesController : Controller
 
     public async Task<IActionResult> Index()
     {
-        try
+        var response = await _httpClient.GetAsync("http://catalog-api/api/plates");
+        if (response.IsSuccessStatusCode)
         {
-            var response = await _httpClient.GetAsync("http://catalog-api/api/plates");
-            if (response.IsSuccessStatusCode)
-            {
-                var plates = await response.Content.ReadFromJsonAsync<List<PlateDto>>();
-                return View(new PlatesViewModel { Plates = plates });
-            }
-        }
-        catch (Exception ex)
-        {
-            var x = ex.Message;
+            var plates = await response.Content.ReadFromJsonAsync<List<PlateDto>>();
+            return View(new PlatesViewModel { Plates = plates });
         }
 
         return BadRequest("Failed to fetch data.");
     }
 
-    public IActionResult Privacy()
+    public async Task<IActionResult> Details(Guid id)
     {
-        return View();
-    }
+        var response = await _httpClient.GetAsync($"http://catalog-api/api/plates/{id}");
+        if (response.IsSuccessStatusCode)
+        {
+            var plate = await response.Content.ReadFromJsonAsync<PlateDto>();
+            return View(plate);
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return NotFound();
     }
 }
