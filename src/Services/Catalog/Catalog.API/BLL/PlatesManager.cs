@@ -1,5 +1,6 @@
 ﻿using Catalog.API.DAL;
 using Catalog.API.DTOs;
+using Mapster;
 
 namespace Catalog.API.BLL;
 
@@ -12,19 +13,21 @@ public class PlatesManager : IPlatesManager
         _platesAccessor = platesAccessor;
     }
 
+    public async Task<PlateDto> CreateAsync(PlateDto newPlate)
+    {
+        var plateEntity = newPlate.Adapt<Plate>();
+
+        await _platesAccessor.CreateAsync(plateEntity);
+        await _platesAccessor.SaveChangesAsync();
+
+        return plateEntity.Adapt<PlateDto>();
+    }
+
     public async Task<IEnumerable<PlateDto>> ListAsync()
     {
         var plates = await _platesAccessor.ListAsync();
 
-        return plates.Select(plate => new PlateDto
-        {
-            Id = plate.Id,
-            Registration = plate.Registration,
-            PurchasePrice = plate.PurchasePrice,
-            SalePrice = plate.SalePrice,
-            Letters = plate.Letters,
-            Numbers = plate.Numbers
-        });
+        return plates.Adapt<IEnumerable<PlateDto>>();
     }
 
     public async Task<PlateDto?> GetAsync(Guid id)
@@ -32,14 +35,6 @@ public class PlatesManager : IPlatesManager
         var plate = await _platesAccessor.GetAsync(id);
         if (plate is null) { return null; }
 
-        return new PlateDto
-        {
-            Id = plate.Id,
-            Registration = plate.Registration,
-            PurchasePrice = plate.PurchasePrice,
-            SalePrice = plate.SalePrice,
-            Letters = plate.Letters,
-            Numbers = plate.Numbers
-        };
+        return plate.Adapt<PlateDto>();
     }
 }
