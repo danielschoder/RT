@@ -12,7 +12,7 @@ public class PlatesManager : IPlatesManager
         _platesAccessor = platesAccessor;
     }
 
-    public async Task<IEnumerable<PlateDto>> GetPlatesAsync()
+    public async Task<IEnumerable<PlateDto>> ListAsync()
     {
         var plates = await _platesAccessor.ListAsync();
 
