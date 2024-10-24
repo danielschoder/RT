@@ -57,7 +57,8 @@ public class PlatesManager : IPlatesManager
         if (plate == null) { return null; }
 
         plate.Status = newStatus;
-        await _platesAccessor.UpdateAsync(plate);
+        _platesAccessor.UpdateAsync(plate);
+        await _platesAccessor.SaveChangesAsync();
 
         return plate.Adapt<PlateDto>();
     }
