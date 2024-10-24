@@ -21,13 +21,14 @@ public class PlatesController : Controller
         var response = await _httpClient.GetAsync("http://catalog-api/api/plates");
         if (response.IsSuccessStatusCode)
         {
-            var plates = await response.Content.ReadFromJsonAsync<List<PlateDto>>();
+            var plates = (await response.Content.ReadFromJsonAsync<List<PlateBasicDto>>());
             return View(new PlatesViewModel { Plates = plates });
         }
 
         return BadRequest("Failed to fetch data.");
     }
 
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> Details(Guid id)
     {
         var response = await _httpClient.GetAsync($"http://catalog-api/api/plates/{id}");
