@@ -36,7 +36,7 @@ public class PlatesManagerTests
             .ReturnsAsync(plates);
 
         // Act
-        var result = await _platesManager.GetPlatesAsync();
+        var result = await _platesManager.ListAsync();
 
         // Assert
         Assert.That(result, Is.InstanceOf<IEnumerable<PlateDto>>());
@@ -62,5 +62,58 @@ public class PlatesManagerTests
             Assert.That(plateDtos[1].Numbers, Is.EqualTo(789));
         });
         _mockPlatesAccessor.Verify(pa => pa.ListAsync(), Times.Once);
+    }
+
+    [Test]
+    public async Task GetAsync_ValidId_ReturnsPlateDto()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var plate = new Plate
+        {
+            Id = id,
+            Registration = "ABC123",
+            PurchasePrice = 100.00m,
+            SalePrice = 150.00m,
+            Letters = "ABC",
+            Numbers = 123
+        };
+
+        _mockPlatesAccessor
+            .Setup(pa => pa.GetAsync(id))
+            .ReturnsAsync(plate);
+
+        // Act
+        var result = await _platesManager.GetAsync(id);
+
+        // Assert
+        Assert.That(result, Is.InstanceOf<PlateDto>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Id, Is.EqualTo(id));
+            Assert.That(result.Registration, Is.EqualTo("ABC123"));
+            Assert.That(result.PurchasePrice, Is.EqualTo(100.00m));
+            Assert.That(result.SalePrice, Is.EqualTo(150.00m));
+            Assert.That(result.Letters, Is.EqualTo("ABC"));
+            Assert.That(result.Numbers, Is.EqualTo(123));
+        });
+        _mockPlatesAccessor.Verify(pa => pa.GetAsync(id), Times.Once);
+    }
+
+    [Test]
+    public async Task GetAsync_InvalidId_ReturnsNull()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        _mockPlatesAccessor
+            .Setup(pa => pa.GetAsync(id))
+            .ReturnsAsync((Plate)null); // Simulate not found
+
+        // Act
+        var result = await _platesManager.GetAsync(id);
+
+        // Assert
+        Assert.That(result, Is.Null);
+        _mockPlatesAccessor.Verify(pa => pa.GetAsync(id), Times.Once);
     }
 }

@@ -29,7 +29,7 @@ public class PlatesControllerTests
         };
 
         _mockPlatesManager
-            .Setup(pm => pm.GetPlatesAsync())
+            .Setup(pm => pm.ListAsync())
             .ReturnsAsync(plateDtos);
 
         // Act
@@ -56,6 +56,57 @@ public class PlatesControllerTests
             Assert.That(firstPlate.Numbers, Is.EqualTo(plateDtos[0].Numbers));
         });
 
-        _mockPlatesManager.Verify(pm => pm.GetPlatesAsync(), Times.Once);
+        _mockPlatesManager.Verify(pm => pm.ListAsync(), Times.Once);
+    }
+
+    [Test]
+    public async Task GetPlate_ValidId_ReturnsOkResultWithPlateDto()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var plateDto = new PlateDto
+        {
+            Id = id,
+            Registration = "ABC123",
+            PurchasePrice = 100.00m,
+            SalePrice = 150.00m,
+            Letters = "ABC",
+            Numbers = 123
+        };
+
+        _mockPlatesManager
+            .Setup(pm => pm.GetAsync(id))
+            .ReturnsAsync(plateDto);
+
+        // Act
+        var result = await _controller.GetPlate(id);
+
+        // Assert
+        Assert.That(result?.Result, Is.InstanceOf<OkObjectResult>());
+        var okResult = result.Result as OkObjectResult;
+        var plate = okResult?.Value as PlateDto;
+        Assert.Multiple(() =>
+        {
+            Assert.That(plate, Is.InstanceOf<PlateDto>());
+            Assert.That(plate?.Id, Is.EqualTo(id));
+        });
+    }
+
+    [Test]
+    public async Task GetPlate_InvalidId_ReturnsNotFoundResult()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        PlateDto? nullPlateDto = null;
+
+        _mockPlatesManager
+            .Setup(pm => pm.GetAsync(id))
+            .ReturnsAsync(nullPlateDto);
+
+        // Act
+        var result = await _controller.GetPlate(id);
+
+        // Assert
+        Assert.That(result.Result, Is.InstanceOf<NotFoundResult>());
     }
 }

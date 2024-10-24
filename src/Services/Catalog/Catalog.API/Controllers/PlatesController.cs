@@ -17,6 +17,15 @@ public class PlatesController : Controller
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PlateDto>>> GetPlates()
     {
-        return Ok(await _platesManager.GetPlatesAsync());
+        return Ok(await _platesManager.ListAsync());
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<PlateDto>> GetPlate(Guid id)
+    {
+        var plate = await _platesManager.GetAsync(id);
+        if (plate == null) { return NotFound(); }
+
+        return Ok(plate);
     }
 }

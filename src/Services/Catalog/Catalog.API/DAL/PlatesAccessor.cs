@@ -15,4 +15,11 @@ public class PlatesAccessor : IPlatesAccessor
             .AsNoTracking()
             .ToListAsync();
     }
+
+    public async Task<Plate?> GetAsync(Guid id)
+    {
+        return await _dbContext.Plates
+            .AsNoTracking()
+            .FirstOrDefaultAsync(plate => plate.Id == id);
+    }
 }
