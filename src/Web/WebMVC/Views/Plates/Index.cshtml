@@ -31,6 +31,7 @@
                     <th>Registration</th>
                     <th>Purchase Price</th>
                     <th>Sale Price</th>
+                    <th>R</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +43,7 @@
                         </td>
                         <td>@plate.PurchasePrice</td>
                         <td>@plate.SalePrice</td>
+                        <td>@(plate.Status == 1 ? "R" : "")</td>
                     </tr>
                 }
             </tbody>

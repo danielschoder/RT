@@ -26,6 +26,8 @@ public class PlatesAccessor : IPlatesAccessor
         string sortOrder)
     {
         var query = _dbContext.Plates.AsNoTracking();
+        
+        var totalRecords = await query.CountAsync();
 
         query = sortOrder switch
         {
@@ -35,11 +37,8 @@ public class PlatesAccessor : IPlatesAccessor
             "RegistrationDesc" => query.OrderByDescending(p => p.Registration),
             _ => query
         };
-        
-        var totalRecords = await query.CountAsync();
 
         var plates = await query
-            .AsNoTracking()
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -54,10 +53,9 @@ public class PlatesAccessor : IPlatesAccessor
             .FirstOrDefaultAsync(plate => plate.Id == id);
     }
 
-    public async Task UpdateAsync(Plate plate)
+    public void UpdateAsync(Plate plate)
     {
         _dbContext.Plates.Update(plate);
-        await _dbContext.SaveChangesAsync();
     }
 
     public async Task SaveChangesAsync()

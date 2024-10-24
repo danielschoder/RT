@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text;
 using WebMVC.DTOs;
 using WebMVC.Models;
 
@@ -54,7 +55,7 @@ public class PlatesController : Controller
     }
 
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("Details/{id:guid}")]
     public async Task<IActionResult> Details(Guid id)
     {
         var response = await _httpClient.GetAsync($"http://catalog-api/api/plates/{id}");
@@ -65,5 +66,19 @@ public class PlatesController : Controller
         }
 
         return NotFound();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> SetStatus(Guid id, int status)
+    {
+        var updateResponse = await _httpClient.PatchAsync($"http://catalog-api/api/plates/{id}/status",
+            new StringContent(status.ToString(), Encoding.UTF8, "application/json"));
+
+        if (!updateResponse.IsSuccessStatusCode)
+        {
+            return BadRequest("Failed to update the plate status.");
+        }
+
+        return RedirectToAction("Details", new { id });
     }
 }

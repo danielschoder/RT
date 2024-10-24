@@ -10,7 +10,7 @@ public interface IPlatesAccessor
 
     Task<Plate?> GetAsync(Guid id);
 
-    Task UpdateAsync(Plate plate);
+    void UpdateAsync(Plate plate);
 
     Task SaveChangesAsync();
 }

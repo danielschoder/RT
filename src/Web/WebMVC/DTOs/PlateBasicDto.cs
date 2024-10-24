@@ -9,4 +9,6 @@ public class PlateBasicDto
     public decimal PurchasePrice { get; set; }
 
     public decimal SalePrice { get; set; }
+
+    public int Status { get; set; }
 }
