@@ -36,7 +36,7 @@ public class PlatesManagerTests
             .ReturnsAsync(plates);
 
         // Act
-        var result = await _platesManager.GetPlatesAsync();
+        var result = await _platesManager.ListAsync();
 
         // Assert
         Assert.That(result, Is.InstanceOf<IEnumerable<PlateDto>>());

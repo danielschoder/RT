@@ -29,7 +29,7 @@ public class PlatesControllerTests
         };
 
         _mockPlatesManager
-            .Setup(pm => pm.GetPlatesAsync())
+            .Setup(pm => pm.ListAsync())
             .ReturnsAsync(plateDtos);
 
         // Act
@@ -56,7 +56,7 @@ public class PlatesControllerTests
             Assert.That(firstPlate.Numbers, Is.EqualTo(plateDtos[0].Numbers));
         });
 
-        _mockPlatesManager.Verify(pm => pm.GetPlatesAsync(), Times.Once);
+        _mockPlatesManager.Verify(pm => pm.ListAsync(), Times.Once);
     }
 
     [Test]
