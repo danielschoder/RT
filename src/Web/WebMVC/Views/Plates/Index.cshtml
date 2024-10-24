@@ -1,7 +1,8 @@
 ﻿@using WebMVC.Models
+
 @model PlatesViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Plates";
 }
 
 <div class="text-center">
@@ -12,24 +13,20 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Registration</th>
                     <th>Purchase Price</th>
                     <th>Sale Price</th>
-                    <th>Letters</th>
-                    <th>Numbers</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var plate in Model.Plates)
                 {
                     <tr>
-                        <td>@plate.Id</td>
-                        <td>@plate.Registration</td>
+                        <td>
+                            <a asp-controller="Plates" asp-action="Details" asp-route-id="@plate.Id">@plate.Registration</a>
+                        </td>
                         <td>@plate.PurchasePrice</td>
                         <td>@plate.SalePrice</td>
-                        <td>@plate.Letters</td>
-                        <td>@plate.Numbers</td>
                     </tr>
                 }
             </tbody>
