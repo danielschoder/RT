@@ -50,4 +50,15 @@ public class PlatesManager : IPlatesManager
 
         return plate.Adapt<PlateDto>();
     }
+
+    public async Task<PlateDto?> UpdateStatusAsync(Guid id, int newStatus)
+    {
+        var plate = await _platesAccessor.GetAsync(id);
+        if (plate == null) { return null; }
+
+        plate.Status = newStatus;
+        await _platesAccessor.UpdateAsync(plate);
+
+        return plate.Adapt<PlateDto>();
+    }
 }

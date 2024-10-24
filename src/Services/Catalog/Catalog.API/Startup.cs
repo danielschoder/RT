@@ -1,8 +1,6 @@
 ﻿using Catalog.API.BLL;
 using Catalog.API.DAL;
-using MassTransit;
 using Microsoft.OpenApi.Models;
-using RabbitMQ.Client;
 
 namespace Catalog.API
 {
@@ -48,16 +46,6 @@ namespace Catalog.API
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAllOrigins",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                    });
-            });
 
             services.AddControllers();
             services.AddControllersWithViews();
@@ -66,32 +54,32 @@ namespace Catalog.API
             services.AddScoped<IPlatesAccessor, PlatesAccessor>();
             services.AddScoped<IPlatesManager, PlatesManager>();
 
-            services.AddMassTransit(x =>
-            {
-                //x.AddConsumer<ConsumerClass>();
+            //services.AddMassTransit(x =>
+            //{
+            //    //x.AddConsumer<ConsumerClass>();
 
-                //ADD CONSUMERS HERE
-                x.UsingRabbitMq((context, cfg) =>
-                {
-                    cfg.Host(Configuration["EventBusConnection"], "/", h =>
-                    {
-                        if (!string.IsNullOrEmpty(Configuration["EventBusUserName"]))
-                        {
-                            h.Username(Configuration["EventBusUserName"]);
-                        }
+            //    //ADD CONSUMERS HERE
+            //    x.UsingRabbitMq((context, cfg) =>
+            //    {
+            //        cfg.Host(Configuration["EventBusConnection"], "/", h =>
+            //        {
+            //            if (!string.IsNullOrEmpty(Configuration["EventBusUserName"]))
+            //            {
+            //                h.Username(Configuration["EventBusUserName"]);
+            //            }
 
-                        if (!string.IsNullOrEmpty(Configuration["EventBusPassword"]))
-                        {
-                            h.Password(Configuration["EventBusPassword"]);
-                        }
-                    });
+            //            if (!string.IsNullOrEmpty(Configuration["EventBusPassword"]))
+            //            {
+            //                h.Password(Configuration["EventBusPassword"]);
+            //            }
+            //        });
 
-                    cfg.ConfigureEndpoints(context);
-                    cfg.ExchangeType = ExchangeType.Fanout;
-                });
-            });
+            //        cfg.ConfigureEndpoints(context);
+            //        cfg.ExchangeType = ExchangeType.Fanout;
+            //    });
+            //});
 
-            services.AddMassTransitHostedService();
+            //services.AddMassTransitHostedService();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,7 +105,6 @@ namespace Catalog.API
             // Make work identity server redirections in Edge and lastest versions of browers. WARN: Not valid in a production environment.
             app.Use(async (context, next) =>
             {
-                //context.Response.Headers.Add("Content-Security-Policy", "script-src 'unsafe-inline'");
                 context.Response.Headers.Add("Content-Security-Policy",
                     "default-src 'self'; script-src 'self' https://localhost:7160 'unsafe-inline';");
                 await next();
@@ -134,8 +121,6 @@ namespace Catalog.API
             app.UseRouting();
 
             app.UseCors("CorsPolicy");
-
-            app.UseCors("AllowAllOrigins");
 
             app.UseEndpoints(endpoints =>
             {
