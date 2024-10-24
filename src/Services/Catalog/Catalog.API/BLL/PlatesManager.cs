@@ -30,9 +30,9 @@ public class PlatesManager : IPlatesManager
         return plates.Adapt<IEnumerable<PlateDto>>();
     }
 
-    public async Task<PaginatedResult<PlateDto>> ListAsync(int pageNumber, int pageSize)
+    public async Task<PaginatedResult<PlateDto>> ListAsync(int pageNumber, int pageSize, string sortOrder)
     {
-        var (plates, totalRecords) = await _platesAccessor.ListAsync(pageNumber, pageSize);
+        var (plates, totalRecords) = await _platesAccessor.ListAsync(pageNumber, pageSize, sortOrder);
 
         return new PaginatedResult<PlateDto>
         {

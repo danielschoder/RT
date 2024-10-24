@@ -8,7 +8,7 @@ public interface IPlatesManager
 
     Task<IEnumerable<PlateDto>> ListAsync();
 
-    Task<PaginatedResult<PlateDto>> ListAsync(int pageNumber, int pageSize);
+    Task<PaginatedResult<PlateDto>> ListAsync(int pageNumber, int pageSize, string sortOrder);
 
     Task<PlateDto?> GetAsync(Guid id);
 }

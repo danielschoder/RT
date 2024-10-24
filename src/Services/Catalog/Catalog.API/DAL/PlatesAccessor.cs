@@ -20,11 +20,25 @@ public class PlatesAccessor : IPlatesAccessor
             .ToListAsync();
     }
 
-    public async Task<(IEnumerable<Plate> Plates, int TotalRecords)> ListAsync(int pageNumber, int pageSize)
+    public async Task<(IEnumerable<Plate> Plates, int TotalRecords)> ListAsync(
+        int pageNumber,
+        int pageSize,
+        string sortOrder)
     {
-        var totalRecords = await _dbContext.Plates.CountAsync();
+        var query = _dbContext.Plates.AsNoTracking();
 
-        var plates = await _dbContext.Plates
+        query = sortOrder switch
+        {
+            "SalePriceAsc" => query.OrderBy(p => p.SalePrice).ThenBy(p => p.Registration),
+            "SalePriceDesc" => query.OrderByDescending(p => p.SalePrice).ThenBy(p => p.Registration),
+            "RegistrationAsc" => query.OrderBy(p => p.Registration),
+            "RegistrationDesc" => query.OrderByDescending(p => p.Registration),
+            _ => query
+        };
+        
+        var totalRecords = await query.CountAsync();
+
+        var plates = await query
             .AsNoTracking()
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)

@@ -1,4 +1,5 @@
-﻿using WebMVC.DTOs;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using WebMVC.DTOs;
 using WebMVC.Models;
 
 namespace WebMVC.Controllers;
@@ -16,9 +17,18 @@ public class PlatesController : Controller
         _httpClient = httpClient;
     }
 
-    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 20)
+    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 20, string sortOrder = "RegistrationAsc")
     {
-        var response = await _httpClient.GetAsync($"http://catalog-api/api/plates?pageNumber={pageNumber}&pageSize={pageSize}");
+        var sortOptions = new List<SelectListItem>
+        {
+            new() { Value = "RegistrationAsc", Text = "Registration Ascending" },
+            new() { Value = "RegistrationDesc", Text = "Registration Descending" },
+            new() { Value = "SalePriceAsc", Text = "Sale Price Ascending" },
+            new() { Value = "SalePriceDesc", Text = "Sale Price Descending" }
+        };
+
+        var response = await _httpClient
+            .GetAsync($"http://catalog-api/api/plates?pageNumber={pageNumber}&pageSize={pageSize}&sortOrder={sortOrder}");
         if (response.IsSuccessStatusCode)
         {
             var paginatedResult = await response.Content.ReadFromJsonAsync<PaginatedResult<PlateBasicDto>>();
@@ -31,7 +41,9 @@ public class PlatesController : Controller
                     PageSize = paginatedResult.PageSize,
                     TotalPages = paginatedResult.TotalPages,
                     HasNextPage = paginatedResult.HasNextPage,
-                    HasPreviousPage = paginatedResult.HasPreviousPage
+                    HasPreviousPage = paginatedResult.HasPreviousPage,
+                    SortOrder = sortOrder,
+                    SortOptions = sortOptions
                 };
 
                 return View(viewModel);

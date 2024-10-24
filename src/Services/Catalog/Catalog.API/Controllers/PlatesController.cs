@@ -29,9 +29,12 @@ public class PlatesController : Controller
     //}
 
     [HttpGet]
-    public async Task<ActionResult<PaginatedResult<PlateDto>>> GetPlates(int pageNumber = 1, int pageSize = 20)
+    public async Task<ActionResult<PaginatedResult<PlateDto>>> GetPlates(
+        int pageNumber = 1,
+        int pageSize = 20,
+        string sortOrder = "RegistrationAsc")
     {
-        var result = await _platesManager.ListAsync(pageNumber, pageSize);
+        var result = await _platesManager.ListAsync(pageNumber, pageSize, sortOrder);
         return Ok(result);
     }
 
