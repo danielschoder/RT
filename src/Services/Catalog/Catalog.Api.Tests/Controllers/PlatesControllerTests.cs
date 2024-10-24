@@ -20,43 +20,53 @@ public class PlatesControllerTests
     }
 
     [Test]
-    public async Task GetPlates_ReturnsOkResult_WithListOfPlateDtos()
+    public async Task GetPlates_ReturnsOkResult_WithExpectedPaginatedResult()
     {
         // Arrange
-        var plateDtos = new List<PlateDto>
+        var expectedPlates = new PaginatedResult<PlateDto>
         {
-            new() { Id = Guid.NewGuid(), Registration = "ABC123", PurchasePrice = 100.00m, SalePrice = 150.00m, Letters = "ABC", Numbers = 123 },
+            Data = new List<PlateDto>
+            {
+                new() { Id = Guid.NewGuid(), Registration = "ABC123" },
+                new() { Id = Guid.NewGuid(), Registration = "XYZ789" }
+            },
+            CurrentPage = 1,
+            PageSize = 20,
+            TotalRecords = 2
         };
 
-        _mockPlatesManager
-            .Setup(pm => pm.ListAsync())
-            .ReturnsAsync(plateDtos);
+        _mockPlatesManager.Setup(m => m.ListAsync(1, 20, "RegistrationAsc"))
+                          .ReturnsAsync(expectedPlates);
 
         // Act
         var result = await _controller.GetPlates();
 
         // Assert
-        Assert.That(result.Result, Is.InstanceOf<OkObjectResult>()); // Check if the result is OkObjectResult
-
         var okResult = result.Result as OkObjectResult;
-        Assert.That(okResult, Is.Not.Null);
-        Assert.That(okResult.Value, Is.InstanceOf<IEnumerable<PlateDto>>());
-
-        var returnedPlates = okResult.Value as IEnumerable<PlateDto>;
-        Assert.That(returnedPlates?.Count(), Is.EqualTo(plateDtos.Count));
-
-        var firstPlate = returnedPlates.First();
+        var paginatedResult = okResult?.Value as PaginatedResult<PlateDto>;
         Assert.Multiple(() =>
         {
-            Assert.That(firstPlate.Id, Is.EqualTo(plateDtos[0].Id));
-            Assert.That(firstPlate.Registration, Is.EqualTo(plateDtos[0].Registration));
-            Assert.That(firstPlate.PurchasePrice, Is.EqualTo(plateDtos[0].PurchasePrice));
-            Assert.That(firstPlate.SalePrice, Is.EqualTo(plateDtos[0].SalePrice));
-            Assert.That(firstPlate.Letters, Is.EqualTo(plateDtos[0].Letters));
-            Assert.That(firstPlate.Numbers, Is.EqualTo(plateDtos[0].Numbers));
+            Assert.That(paginatedResult, Is.InstanceOf<PaginatedResult<PlateDto>>());
+            Assert.That(paginatedResult?.CurrentPage, Is.EqualTo(expectedPlates.CurrentPage));
+            Assert.That(paginatedResult?.PageSize, Is.EqualTo(expectedPlates.PageSize));
+            Assert.That(paginatedResult?.TotalRecords, Is.EqualTo(expectedPlates.TotalRecords));
+            Assert.That(paginatedResult?.Data.Count(), Is.EqualTo(expectedPlates.Data.Count()));
         });
+    }
 
-        _mockPlatesManager.Verify(pm => pm.ListAsync(), Times.Once);
+    [Test]
+    public async Task GetPlates_CallsListAsync_WithCorrectParameters()
+    {
+        // Arrange
+        const int pageNumber = 1;
+        const int pageSize = 20;
+        const string sortOrder = "RegistrationAsc";
+
+        // Act
+        await _controller.GetPlates(pageNumber, pageSize, sortOrder);
+
+        // Assert
+        _mockPlatesManager.Verify(m => m.ListAsync(pageNumber, pageSize, sortOrder), Times.Once);
     }
 
     [Test]
