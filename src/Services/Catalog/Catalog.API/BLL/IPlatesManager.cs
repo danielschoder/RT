@@ -11,4 +11,6 @@ public interface IPlatesManager
     Task<PaginatedResult<PlateDto>> ListAsync(int pageNumber, int pageSize, string sortOrder);
 
     Task<PlateDto?> GetAsync(Guid id);
+
+    Task<PlateDto?> UpdateStatusAsync(Guid id, int newStatus);
 }

@@ -13,4 +13,6 @@ public class PlateDto
     public string? Letters { get; set; }
 
     public int Numbers { get; set; }
+
+    public int Status { get; set; }
 }

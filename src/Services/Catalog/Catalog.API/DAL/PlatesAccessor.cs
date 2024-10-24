@@ -54,6 +54,12 @@ public class PlatesAccessor : IPlatesAccessor
             .FirstOrDefaultAsync(plate => plate.Id == id);
     }
 
+    public async Task UpdateAsync(Plate plate)
+    {
+        _dbContext.Plates.Update(plate);
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task SaveChangesAsync()
     {
         await _dbContext.SaveChangesAsync();

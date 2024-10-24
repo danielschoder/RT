@@ -22,12 +22,6 @@ public class PlatesController : Controller
         return CreatedAtAction(nameof(GetPlate), new { id = createdPlate.Id }, createdPlate);
     }
 
-    //[HttpGet]
-    //public async Task<ActionResult<IEnumerable<PlateDto>>> GetPlates()
-    //{
-    //    return Ok(await _platesManager.ListAsync());
-    //}
-
     [HttpGet]
     public async Task<ActionResult<PaginatedResult<PlateDto>>> GetPlates(
         int pageNumber = 1,
@@ -42,8 +36,13 @@ public class PlatesController : Controller
     public async Task<ActionResult<PlateDto>> GetPlate(Guid id)
     {
         var plate = await _platesManager.GetAsync(id);
-        if (plate == null) { return NotFound(); }
+        return plate is null ? NotFound() : Ok(plate);
+    }
 
-        return Ok(plate);
+    [HttpPatch("{id:guid}/status")]
+    public async Task<IActionResult> UpdatePlateStatus(Guid id, [FromBody] int status)
+    {
+        var plate = await _platesManager.UpdateStatusAsync(id, status);
+        return plate is null ? NotFound() : Ok(plate);
     }
 }
