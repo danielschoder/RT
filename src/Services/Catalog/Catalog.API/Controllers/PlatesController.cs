@@ -22,10 +22,17 @@ public class PlatesController : Controller
         return CreatedAtAction(nameof(GetPlate), new { id = createdPlate.Id }, createdPlate);
     }
 
+    //[HttpGet]
+    //public async Task<ActionResult<IEnumerable<PlateDto>>> GetPlates()
+    //{
+    //    return Ok(await _platesManager.ListAsync());
+    //}
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PlateDto>>> GetPlates()
+    public async Task<ActionResult<PaginatedResult<PlateDto>>> GetPlates(int pageNumber = 1, int pageSize = 20)
     {
-        return Ok(await _platesManager.ListAsync());
+        var result = await _platesManager.ListAsync(pageNumber, pageSize);
+        return Ok(result);
     }
 
     [HttpGet("{id:guid}")]

@@ -20,6 +20,19 @@ public class PlatesAccessor : IPlatesAccessor
             .ToListAsync();
     }
 
+    public async Task<(IEnumerable<Plate> Plates, int TotalRecords)> ListAsync(int pageNumber, int pageSize)
+    {
+        var totalRecords = await _dbContext.Plates.CountAsync();
+
+        var plates = await _dbContext.Plates
+            .AsNoTracking()
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (plates, totalRecords);
+    }
+
     public async Task<Plate?> GetAsync(Guid id)
     {
         return await _dbContext.Plates
