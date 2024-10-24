@@ -1,9 +1,10 @@
 ﻿using Catalog.API.DTOs;
 
-namespace Catalog.API.BLL
+namespace Catalog.API.BLL;
+
+public interface IPlatesManager
 {
-    public interface IPlatesManager
-    {
-        Task<IEnumerable<PlateDto>> GetPlatesAsync();
-    }
+    Task<IEnumerable<PlateDto>> GetPlatesAsync();
+
+    Task<PlateDto?> GetAsync(Guid id);
 }
