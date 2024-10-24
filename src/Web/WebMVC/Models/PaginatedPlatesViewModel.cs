@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WebMVC.DTOs;
 
 namespace WebMVC.Models;
@@ -17,4 +18,8 @@ public class PaginatedPlatesViewModel
     public bool HasNextPage { get; set; }
 
     public bool HasPreviousPage { get; set; }
+
+    public string? SortOrder { get; set; }
+
+    public IEnumerable<SelectListItem> SortOptions { get; set; } = Enumerable.Empty<SelectListItem>();
 }

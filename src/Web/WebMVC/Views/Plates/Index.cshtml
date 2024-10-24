@@ -8,6 +8,21 @@
 <div class="text-center">
     <h1 class="display-4">Plates</h1>
 
+    <form method="get" action="@Url.Action("Index")">
+        <div>
+            <label for="sortOrder">Sort By:</label>
+            <select id="sortOrder" name="sortOrder">
+                @foreach (var option in Model.SortOptions)
+                {
+                    <option value="@option.Value" selected="@(option.Value == Model.SortOrder ? "selected" : null)">
+                        @option.Text
+                    </option>
+                }
+            </select>
+            <button type="submit" formaction="@Url.Action("Index", new { pageNumber = 1, pageSize = Model.PageSize })">Apply Sort</button>
+        </div>
+    </form>
+
     @if (Model.Plates != null && Model.Plates.Any())
     {
         <table class="table">
@@ -35,14 +50,14 @@
         <div>
             @if (Model.HasPreviousPage)
             {
-                <a href="@Url.Action("Index", new { pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize })">Previous</a>
+                <a href="@Url.Action("Index", new { pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize, sortOrder = Model.SortOrder })">Previous</a>
             }
 
             Page @Model.CurrentPage of @Model.TotalPages
 
             @if (Model.HasNextPage)
             {
-                <a href="@Url.Action("Index", new { pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize })">Next</a>
+                <a href="@Url.Action("Index", new { pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize, sortOrder = Model.SortOrder })">Next</a>
             }
         </div>
     }
