@@ -1,6 +1,6 @@
 ﻿@using WebMVC.Models
 
-@model PlatesViewModel
+@model PaginatedPlatesViewModel
 @{
     ViewData["Title"] = "Plates";
 }
@@ -31,6 +31,20 @@
                 }
             </tbody>
         </table>
+
+        <div>
+            @if (Model.HasPreviousPage)
+            {
+                <a href="@Url.Action("Index", new { pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize })">Previous</a>
+            }
+
+            Page @Model.CurrentPage of @Model.TotalPages
+
+            @if (Model.HasNextPage)
+            {
+                <a href="@Url.Action("Index", new { pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize })">Next</a>
+            }
+        </div>
     }
     else
     {
